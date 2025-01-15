@@ -1,10 +1,19 @@
-import { Container, Card, CssBaseline, Typography } from '@mui/material';
+import { Container, CssBaseline } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import TaskList from './components/TaskList';
+import CreateTask from './components/CreateTask';
+import { TaskProvider } from './components/TaskContext';
+
+
+
 
 function App() {
+  
+
   return (
     <>
       <CssBaseline />
+      <TaskProvider>
       <Container
         maxWidth={false}
         disableGutters
@@ -16,10 +25,10 @@ function App() {
           justifyContent: 'center',
         }}
       >
-        <Card sx={{ p: 4 }}>
-          <Typography variant="subtitle2">Evermore Coding Challenge</Typography>
-        </Card>
+       < CreateTask />
+       <TaskList />
       </Container>
+      </TaskProvider>
     </>
   );
 }

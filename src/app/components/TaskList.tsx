@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { Task } from '../types';
+import { Task } from '../../types';
 import { Button, List, ListItem, ListItemText, Box, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import TaskContext from './TaskContext';
 import DeleteTask from './DeleteTask';
 import EditTask from './EditTask';
+import TaskFilters from './TaskFilter';
+import TaskActions from './TaskActions';
 
 const TaskList = () => {
   const { tasks, updateTask, removeTask } = useContext(TaskContext);
@@ -75,35 +77,12 @@ const TaskList = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-        <FormControl size="small" variant="outlined">
-          <InputLabel>State</InputLabel>
-          <Select
-            value={stateFilter}
-            onChange={(e) => setStateFilter(e.target.value as 'All' | 'To Do' | 'In Progress' | 'Done')}
-            label="State"
-          >
-            <MenuItem value="All">All</MenuItem>
-            <MenuItem value="To Do">To Do</MenuItem>
-            <MenuItem value="In Progress">In Progress</MenuItem>
-            <MenuItem value="Done">Done</MenuItem>
-          </Select>
-        </FormControl>
-
-        <FormControl size="small" variant="outlined">
-          <InputLabel>Priority</InputLabel>
-          <Select
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value as 'All' | 'High' | 'Medium' | 'Low')}
-            label="Priority"
-          >
-            <MenuItem value="All">All</MenuItem>
-            <MenuItem value="High">High</MenuItem>
-            <MenuItem value="Medium">Medium</MenuItem>
-            <MenuItem value="Low">Low</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+      <TaskFilters 
+        stateFilter={stateFilter}
+        priorityFilter={priorityFilter}
+        setStateFilter={setStateFilter}
+        setPriorityFilter={setPriorityFilter}
+      />
 
       <List>
         {filteredAndSortedTasks.map((task) => (
@@ -122,29 +101,13 @@ const TaskList = () => {
               primary={task.name}
               secondary={`Priority: ${task.priority}, State: ${task.state}`}
             />
-            <Box sx={{ display: 'flex', gap: '8px' }}>
-              <Button
-                variant="contained"
-                color="info"
-                onClick={() => handleStateChange(task)}
-              >
-                Move to {getNextState(task.state)}
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleOpenEditModal(task)}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => handleOpenDeleteModal(task.id, task.name)}
-              >
-                Delete
-              </Button>
-            </Box>
+            < TaskActions
+                task={task}
+                onStateChange={handleStateChange}
+                onEdit={handleOpenEditModal}
+                onDelete={handleOpenDeleteModal}
+                getNextState={getNextState}
+            />
           </ListItem>
         ))}
       </List>
